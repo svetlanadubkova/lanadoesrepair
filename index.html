@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lana does repair</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            background: #fefefe;
+            color: #ff0000;
+            line-height: 1.8;
+            min-height: 100vh;
+            padding: 20px;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .quadrant-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .quadrant {
+            border: 1px solid #ff0000;
+            padding: 30px;
+            background: #fefefe;
+            min-height: 500px;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .quadrant.dotted {
+            border-style: dashed;
+        }
+
+        .quadrant-title {
+            font-size: 1.4rem;
+            font-style: italic;
+            margin-bottom: 30px;
+            color: #ff0000;
+            text-align: center;
+            font-weight: 400;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-style: italic;
+            text-decoration: underline;
+            text-decoration-color: #ff0000;
+            text-underline-offset: 6px;
+            margin-bottom: 60px;
+            color: #ff0000;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .phase-header {
+            font-size: 1.4rem;
+            font-style: italic;
+            margin: 50px 0 30px 0;
+            color: #ff0000;
+            text-align: center;
+            font-weight: 400;
+        }
+
+        .step {
+            margin-bottom: 40px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 30px;
+        }
+
+        .step:last-child {
+            border-bottom: none;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: #ff0000;
+            font-style: italic;
+        }
+
+        .step-definition {
+            font-style: italic;
+            margin-bottom: 25px;
+            line-height: 1.9;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .step-definition ol {
+            margin: 15px 0 15px 20px;
+        }
+
+        .step-definition li {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .slider-container {
+            margin: 25px 0;
+        }
+
+        .slider-label {
+            display: block;
+            margin-bottom: 15px;
+            font-style: italic;
+            color: #ff0000;
+            font-size: 0.9rem;
+        }
+
+        .slider {
+            width: 100%;
+            height: 2px;
+            border-radius: 1px;
+            background: #e8e8e8;
+            outline: none;
+            -webkit-appearance: none;
+            margin: 20px 0;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #ff0000;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #ff0000;
+            cursor: pointer;
+            border: none;
+        }
+
+        .slider-value {
+            text-align: center;
+            color: #ff0000;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 20px;
+            border: 1px solid #e8e8e8;
+            border-radius: 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            background: #fafafa;
+            color: #333;
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.7;
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #ff0000;
+            background: #fff;
+        }
+
+        .btn {
+            background: transparent;
+            color: #ff0000;
+            border: 1px solid #e91e63;
+            padding: 12px 24px;
+            border-radius: 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 10px 5px;
+            font-style: italic;
+        }
+
+        .btn:hover {
+            background: #ff0000;
+            color: white;
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            color: white;
+            border-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            border-color: #aaa;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #666;
+            color: white;
+        }
+
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        .suggestion-item {
+            background: transparent;
+            padding: 12px;
+            border: 1px solid #e8e8e8;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        .suggestion-item:hover {
+            border-color: #ff0000;
+            color: #ff0000;
+        }
+
+        .suggestion-item.selected {
+            background: #ff0000;
+            color: white;
+            border-color: #ff0000;
+        }
+
+        .ai-output {
+            background: #f9f9f9;
+            border: 1px solid #e8e8e8;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .ai-output h4 {
+            color: #ff0000;
+            margin-bottom: 20px;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .statement {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 2px solid #ff0000;
+            color: #333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 2px;
+            background: #e8e8e8;
+            margin-bottom: 50px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #ff0000;
+            width: 33.33%;
+            transition: width 0.3s ease;
+        }
+
+        .charge-scale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 0.8rem;
+        }
+
+        .scale-label {
+            color: #999;
+            font-style: italic;
+        }
+
+        .restoration-menu {
+            background: #f9f9f9;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .restoration-item {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 2px solid #ff0000;
+            transition: all 0.2s ease;
+            color: #333;
+            line-height: 1.7;
+        }
+
+        .restoration-item:hover {
+            background: #fafafa;
+        }
+
+        .quote {
+            text-align: center;
+            font-style: italic;
+            margin: 30px 0;
+            color: #999;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+            border-radius: 3px;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-overlay:not(.hidden) {
+            display: flex;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff0000;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .reset-section {
+            text-align: right;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+
+        .reset-link {
+            color: #999;
+            text-decoration: underline;
+            font-style: italic;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            background: none;
+            border: none;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .reset-link:hover {
+            color: #ff0000;
+        }
+
+
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+            
+            .title {
+                font-size: 1.8rem;
+            }
+            
+            .suggestions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reset-section {
+                text-align: center;
+                padding-right: 0;
+            }
+
+            .quadrant-layout {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .quadrant {
+                min-height: 300px;
+                max-height: none;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">lana does repair</h1>
+        
+        <div class="reset-section">
+            <button class="reset-link" id="resetTop">reset/start new repair process</button>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="quadrant-layout">
+            <!-- Quadrant 1: Resourcing & Self-Awareness (Top Left) -->
+            <div class="quadrant" id="quadrant1">
+                <h2 class="quadrant-title">resourcing & self-awareness</h2>
+            
+            <!-- Step 1: Resourcing -->
+            <div class="step">
+                <h3 class="step-title">resourcing</h3>
+                <div class="step-definition">
+                    if we were to oversimplify the nervous system, there would be two states your nervous system could be in: a dysregulated state and a regulated state. when in this regulated state, you:
+                    <ol>
+                        <li>have access to your feelings</li>
+                        <li>are connected to your body</li>
+                        <li>are able to hear what the other is saying</li>
+                    </ol>
+                    in short, you are more centered and calmer.
+                </div>
+                
+                <label class="slider-label">how does your body feel right now? what does your body feel when you're in a regulated state? how do you know when you're becoming dysregulated?</label>
+                <textarea id="bodyAwareness" placeholder="what sensations, tensions, or feelings do you notice in your body right now? reflect on your body's signals..."></textarea>
+
+                <div class="slider-container">
+                    <label class="slider-label">how regulated do you feel right now?</label>
+                    <input type="range" min="1" max="10" value="5" class="slider" id="regulationSlider">
+                    <div class="charge-scale">
+                        <span class="scale-label">dysregulated</span>
+                        <span class="slider-value" id="regulationValue">5</span>
+                        <span class="scale-label">regulated</span>
+                    </div>
+                </div>
+
+                <div style="margin: 25px 0;">
+                    <label class="slider-label">choose resourcing activities that help you feel more centered:</label>
+                    <div class="suggestions-grid" id="resourcingSuggestions">
+                        <div class="suggestion-item" data-activity="journaling">journaling</div>
+                        <div class="suggestion-item" data-activity="weighted blanket">weighted blanket</div>
+                        <div class="suggestion-item" data-activity="movement">moving your body</div>
+                        <div class="suggestion-item" data-activity="art">creating art</div>
+                        <div class="suggestion-item" data-activity="breathing">breathing exercises</div>
+                        <div class="suggestion-item" data-activity="meditation">meditation</div>
+                        <div class="suggestion-item" data-activity="nature">step outside</div>
+                        <div class="suggestion-item" data-activity="tea">warm tea</div>
+                        <div class="suggestion-item" data-activity="friend">talking to a friend</div>
+                    </div>
+                </div>
+
+                <div class="quote">
+                    ground yourself so that you can say what you mean while being able to listen to the other from your heart
+                </div>
+            </div>
+
+            <!-- Step 2: Reflect and Prepare -->
+            <div class="step">
+                <h3 class="step-title">reflect on your emotional experience</h3>
+                <div class="step-definition">
+                    give yourself the space to feel the impact of your own hurt
+                </div>
+
+            </div>
+
+            </div>
+
+            <!-- Quadrant 2: Understanding & Empathy (Top Right) -->
+            <div class="quadrant dotted" id="quadrant2">
+                <h2 class="quadrant-title">prepare your impact - understand your feelings</h2>
+
+            <!-- Step 4: Understand Your Feelings -->
+            <div class="step">
+                <h3 class="step-title">understand your feelings</h3>
+                <div class="step-definition">
+                    take time to understand your own feelings and needs before entering the conversation
+                </div>
+
+                <label class="slider-label">enter your unfiltered thoughts and feelings about what happened:</label>
+                <textarea id="rawThoughts" placeholder="let it all out here - your raw, unfiltered experience..."></textarea>
+
+                <div style="text-align: center; margin: 20px 0;">
+                    <button class="btn" id="convertToNVC">transform into "i feel/i need" statements</button>
+                </div>
+
+                <div id="nvcOutput" class="ai-output hidden">
+                    <h4>your structured impact statements:</h4>
+                    <div id="nvcStatements"></div>
+                </div>
+            </div>
+
+            <!-- Step 5: Bring Curiosity to Your Repair Partner -->
+            <div class="step">
+                <h3 class="step-title">bring curiosity to your repair partner's experience</h3>
+                <div class="step-definition">
+                    wonder about what they might be feeling and experiencing
+                </div>
+
+                <textarea id="partnerEmpathy" placeholder="what might they be feeling? what could their experience be?"></textarea>
+            </div>
+
+            </div>
+
+            <!-- Quadrant 3: The Conversation (Bottom Left) -->
+            <div class="quadrant" id="quadrant3">
+                <h2 class="quadrant-title">the conversation</h2>
+
+            <!-- Step 6: Permission -->
+            <div class="step">
+                <h3 class="step-title">permission</h3>
+                <div class="step-definition">
+                    establish mutual safety and get explicit consent to set both people up for success in resolving the conflict
+                </div>
+
+                <div class="slider-container">
+                    <label class="slider-label">what's your charge level for this conversation?</label>
+                    <input type="range" min="1" max="10" value="5" class="slider" id="chargeSlider">
+                    <div class="charge-scale">
+                        <span class="scale-label">calm</span>
+                        <span class="slider-value" id="chargeValue">5</span>
+                        <span class="scale-label">intense</span>
+                    </div>
+                    <div class="quote">
+                        "i want to talk about this, and i feel a <span id="chargeDisplay">5</span> on the charge scale"
+                    </div>
+                </div>
+
+                <div class="quote" style="margin-top: 20px;">
+                    when you're both ready to have this conversation, click below to begin
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn" id="startConversation">begin the conversation</button>
+            </div>
+
+                <div id="conversation" class="hidden">
+            <h2 class="phase-header">phase 2: the conversation</h2>
+
+            <!-- Step 5: Acknowledge -->
+            <div class="step">
+                <h3 class="step-title">acknowledge</h3>
+                <div class="step-definition">
+                    get on the same page on what happened by validating one another's perception of their experience
+                </div>
+
+                <label class="slider-label">your version of what happened:</label>
+                <textarea id="yourVersion" placeholder="share your perspective on what occurred..."></textarea>
+
+                <label class="slider-label">their version of what happened:</label>
+                <textarea id="theirVersion" placeholder="listen and reflect their perspective here..."></textarea>
+            </div>
+
+            <!-- Step 6: Impact Sharing -->
+            <div class="step">
+                <h3 class="step-title">impact sharing</h3>
+                <div class="step-definition">
+                    share and deeply listen to the impact both people experienced
+                </div>
+
+                <div id="yourImpactReminder" class="ai-output" style="margin-bottom: 20px;">
+                    <h4>your impact statements (for reference):</h4>
+                    <div id="yourImpactDisplay">
+                        <div style="font-style: italic; color: #999; padding: 20px; text-align: center;">
+                            your impact statements will appear here once you generate them in quadrant 2
+                        </div>
+                    </div>
+                </div>
+
+                <label class="slider-label">your repair partner's impact (listen and reflect):</label>
+                <textarea id="partnerImpact" placeholder="what impact did they share with you?"></textarea>
+            </div>
+                </div>
+            </div>
+
+            <!-- Quadrant 4: Restoration Menu (Bottom Right) -->
+            <div class="quadrant dotted" id="quadrant4">
+                <h2 class="quadrant-title">restoration menu</h2>
+
+            <!-- Step 7: Restore Integrity -->
+            <div class="step">
+                <h3 class="step-title">restore integrity</h3>
+                <div class="step-definition">
+                    choose from a menu of actionable ways to actively restore trust and connection
+                </div>
+
+                <div style="text-align: center; margin: 20px 0;">
+                    <button class="btn" id="generateRestoration">generate restoration menu</button>
+                </div>
+
+                <div id="restorationMenu" class="restoration-menu hidden">
+                    <div id="partnerWarning" class="warning hidden">
+                        these recommendations are crafted based solely on your personal experience and perspective. for the most effective repair process, we recommend including your repair partner's thoughts and feelings to create truly mutual restoration options.
+                    </div>
+                    <h4 style="margin-bottom: 20px; color: #ff0000; font-style: italic;">restoration options for you both:</h4>
+                    <div id="restorationOptions"></div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn btn-secondary" id="generateMore">generate more options</button>
+                        <button class="btn" id="savePDF">save as PDF</button>
+                    </div>
+                </div>
+
+                <!-- Completion (shows after restoration) -->
+                <div id="completionSection" class="step hidden" style="text-align: center; border-bottom: none; margin-top: 30px;">
+                    <h3 class="step-title">repair complete</h3>
+                    <div class="quote">
+                        you've both done beautiful work in restoring connection and understanding
+                    </div>
+                    <button class="btn" id="startNew">start a new repair process</button>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div style="font-family: 'Playfair Display', serif; font-style: italic; color: #ff0000;">
+                generating your PDF...
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Generation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        // Application state - API key is now handled by the backend server
+        
+        let appData = {
+            regulationLevel: 5,
+            chargeLevel: 5,
+            resourcingActivities: [],
+            bodyAwareness: '',
+            partnerEmpathy: '',
+            rawThoughts: '',
+            nvcStatements: [],
+            yourVersion: '',
+            theirVersion: '',
+            partnerImpact: ''
+        };
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSliders();
+            initializeResourcingSuggestions();
+            initializeNavigation();
+            loadSavedData();
+            setupAutoSave();
+        });
+
+        function initializeSliders() {
+            const regulationSlider = document.getElementById('regulationSlider');
+            const chargeSlider = document.getElementById('chargeSlider');
+            const regulationValue = document.getElementById('regulationValue');
+            const chargeValue = document.getElementById('chargeValue');
+            const chargeDisplay = document.getElementById('chargeDisplay');
+
+            regulationSlider.addEventListener('input', function() {
+                const value = this.value;
+                regulationValue.textContent = value;
+                appData.regulationLevel = parseInt(value);
+                saveData();
+            });
+
+            chargeSlider.addEventListener('input', function() {
+                const value = this.value;
+                chargeValue.textContent = value;
+                chargeDisplay.textContent = value;
+                appData.chargeLevel = parseInt(value);
+                saveData();
+            });
+        }
+
+        function initializeResourcingSuggestions() {
+            const suggestions = document.querySelectorAll('#resourcingSuggestions .suggestion-item');
+            suggestions.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    const activity = this.dataset.activity;
+                    
+                    if (this.classList.contains('selected')) {
+                        if (!appData.resourcingActivities.includes(activity)) {
+                            appData.resourcingActivities.push(activity);
+                        }
+                    } else {
+                        appData.resourcingActivities = appData.resourcingActivities.filter(a => a !== activity);
+                    }
+                    saveData();
+                });
+            });
+        }
+
+        function setupAutoSave() {
+            // Auto-save all text inputs
+            const textInputs = document.querySelectorAll('textarea, input[type="text"]');
+            textInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (appData.hasOwnProperty(this.id)) {
+                        appData[this.id] = this.value;
+                    }
+                    saveData();
+                });
+            });
+        }
+
+        function saveData() {
+            localStorage.setItem('repairAppData', JSON.stringify(appData));
+        }
+
+        function loadSavedData() {
+            const saved = localStorage.getItem('repairAppData');
+            if (saved) {
+                appData = { ...appData, ...JSON.parse(saved) };
+                
+                // Restore form values
+                Object.keys(appData).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element && appData[key]) {
+                        element.value = appData[key];
+                        if (key === 'regulationLevel') {
+                            document.getElementById('regulationValue').textContent = appData[key];
+                        }
+                        if (key === 'chargeLevel') {
+                            document.getElementById('chargeValue').textContent = appData[key];
+                            document.getElementById('chargeDisplay').textContent = appData[key];
+                        }
+                    }
+                });
+
+                // Restore activity selections
+                appData.resourcingActivities.forEach(activity => {
+                    const element = document.querySelector(`[data-activity="${activity}"]`);
+                    if (element) element.classList.add('selected');
+                });
+
+                // Restore NVC statements if they exist
+                if (appData.nvcStatements && appData.nvcStatements.length > 0) {
+                    displayNVCStatements(appData.nvcStatements);
+                    updateImpactReminder(appData.nvcStatements);
+                }
+            }
+        }
+
+        function initializeNavigation() {
+            document.getElementById('startConversation').addEventListener('click', function() {
+                if (validatePreparation()) {
+                    document.getElementById('conversation').classList.remove('hidden');
+                    document.getElementById('progressFill').style.width = '66.66%';
+                    this.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+
+            document.getElementById('convertToNVC').addEventListener('click', function() {
+                const rawThoughts = document.getElementById('rawThoughts').value;
+                
+                if (rawThoughts.trim()) {
+                    appData.rawThoughts = rawThoughts;
+                    generateNVCStatements(rawThoughts);
+                }
+            });
+
+            document.getElementById('generateRestoration').addEventListener('click', function() {
+                generateRestorationMenu();
+            });
+
+            document.getElementById('generateMore').addEventListener('click', function() {
+                generateRestorationMenu(true);
+            });
+
+            document.getElementById('startNew').addEventListener('click', function() {
+                resetApp();
+            });
+
+            document.getElementById('savePDF').addEventListener('click', function() {
+                generatePDF();
+            });
+
+            document.getElementById('resetTop').addEventListener('click', function() {
+                resetApp();
+            });
+
+        }
+
+        function validatePreparation() {
+            const bodyAwareness = document.getElementById('bodyAwareness').value;
+            
+            if (!bodyAwareness.trim()) {
+                alert('please complete the body awareness reflection before proceeding');
+                return false;
+            }
+            return true;
+        }
+
+        async function generateNVCStatements(rawThoughts) {
+            const button = document.getElementById('convertToNVC');
+            button.disabled = true;
+            button.textContent = 'generating...';
+
+            try {
+                const allContext = gatherAllContext();
+                const response = await callClaudeAPI(rawThoughts, 'nvc', allContext);
+                const statements = response.split('\n').filter(line => line.trim().length > 0);
+                
+                appData.nvcStatements = statements;
+                displayNVCStatements(statements);
+                saveData();
+
+            } catch (error) {
+                console.error('Error generating NVC statements:', error);
+                alert('Error generating statements. Please check your API key and try again.');
+            }
+
+            button.disabled = false;
+            button.textContent = 'transform into "i feel/i need" statements';
+        }
+
+        async function generateRestorationMenu(more = false) {
+            const button = more ? document.getElementById('generateMore') : document.getElementById('generateRestoration');
+            button.disabled = true;
+            button.textContent = 'generating...';
+
+            try {
+                const allContext = gatherAllContext();
+                const hasPartnerInput = document.getElementById('partnerEmpathy').value.trim() || 
+                                      document.getElementById('theirVersion').value.trim() || 
+                                      document.getElementById('partnerImpact').value.trim();
+
+                if (!hasPartnerInput) {
+                    document.getElementById('partnerWarning').classList.remove('hidden');
+                }
+
+                const promptText = more ? 'Generate 5 additional restoration options' : 'Generate a restoration menu';
+                const response = await callClaudeAPI(promptText, 'restoration', allContext);
+                
+                // For restoration menu, we expect the full response with summary
+                if (more) {
+                    const options = response.split('\n').filter(line => line.trim().length > 0);
+                    displayRestorationOptions(options, more);
+                } else {
+                    // Display the full response which includes summary + 5 R's
+                    displayRestorationResponse(response);
+                }
+
+            } catch (error) {
+                console.error('Error generating restoration menu:', error);
+                alert('Error generating restoration options. Please check your API key and try again.');
+            }
+
+            button.disabled = false;
+            button.textContent = more ? 'generate more options' : 'generate restoration menu';
+        }
+
+        function gatherAllContext() {
+            return `
+Current regulation level: ${appData.regulationLevel}/10
+Current charge level: ${appData.chargeLevel}/10
+Body awareness: ${appData.bodyAwareness}
+Resourcing activities: ${appData.resourcingActivities.join(', ')}
+Repair partner empathy: ${appData.partnerEmpathy}
+Raw thoughts: ${appData.rawThoughts}
+Generated I-statements: ${appData.nvcStatements.join('; ')}
+Your version of events: ${appData.yourVersion}
+Their version of events: ${appData.theirVersion}
+Repair partner's impact: ${appData.partnerImpact}
+            `.trim();
+        }
+
+        async function callClaudeAPI(prompt, type, context) {
+            try {
+                const response = await fetch('/api/claude', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        type: type,
+                        context: context
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `Server error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.text;
+                
+            } catch (error) {
+                console.error('API call error:', error);
+                throw error;
+            }
+        }
+
+        function displayNVCStatements(statements) {
+            appData.nvcStatements = statements;
+            const container = document.getElementById('nvcStatements');
+            container.innerHTML = '';
+            
+            statements.forEach((statement, index) => {
+                const div = document.createElement('div');
+                div.className = 'statement';
+                div.innerHTML = `
+                    <textarea style="border: none; background: transparent; font-style: italic; width: 100%; color: #333; font-family: 'Playfair Display', serif; min-height: 60px; resize: none;" 
+                              id="statement_${index}" 
+                              oninput="updateStatement(${index}, this.value)">${statement}</textarea>
+                `;
+                container.appendChild(div);
+            });
+            
+            document.getElementById('nvcOutput').classList.remove('hidden');
+            
+            // Also update the reminder display in the conversation quadrant
+            updateImpactReminder(statements);
+        }
+
+        function updateImpactReminder(statements) {
+            const reminderContainer = document.getElementById('yourImpactDisplay');
+            reminderContainer.innerHTML = '';
+            
+            if (statements && statements.length > 0) {
+                statements.forEach((statement, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'statement';
+                    div.style.fontSize = '0.9rem';
+                    div.innerHTML = statement;
+                    reminderContainer.appendChild(div);
+                });
+            } else {
+                reminderContainer.innerHTML = `
+                    <div style="font-style: italic; color: #999; padding: 20px; text-align: center;">
+                        your impact statements will appear here once you generate them in quadrant 2
+                    </div>
+                `;
+            }
+        }
+
+        function updateStatement(index, value) {
+            appData.nvcStatements[index] = value;
+            saveData();
+            // Update the reminder display when statements are edited
+            updateImpactReminder(appData.nvcStatements);
+        }
+
+        function displayRestorationResponse(response) {
+            const container = document.getElementById('restorationOptions');
+            container.innerHTML = '';
+            document.getElementById('restorationMenu').classList.remove('hidden');
+            
+            // Split response into paragraphs and format each one
+            const paragraphs = response.split('\n\n').filter(p => p.trim().length > 0);
+            
+            paragraphs.forEach((paragraph, index) => {
+                const div = document.createElement('div');
+                div.className = 'restoration-item';
+                div.innerHTML = paragraph.replace(/\n/g, '<br>');
+                container.appendChild(div);
+            });
+
+            document.getElementById('progressFill').style.width = '100%';
+            
+            // Show completion section after restoration menu is generated
+            document.getElementById('completionSection').classList.remove('hidden');
+        }
+
+        function displayRestorationOptions(options, append = false) {
+            const container = document.getElementById('restorationOptions');
+            
+            if (!append) {
+                container.innerHTML = '';
+                document.getElementById('restorationMenu').classList.remove('hidden');
+            }
+            
+            options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'restoration-item';
+                div.innerHTML = option;
+                container.appendChild(div);
+            });
+
+            document.getElementById('progressFill').style.width = '100%';
+            
+            // Show completion section after restoration menu is generated (only if not appending)
+            if (!append) {
+                document.getElementById('completionSection').classList.remove('hidden');
+            }
+        }
+
+        function resetApp() {
+            // Clear localStorage
+            localStorage.removeItem('repairAppData');
+            
+            // Reset app data
+            appData = {
+                regulationLevel: 5,
+                chargeLevel: 5,
+                resourcingActivities: [],
+                bodyAwareness: '',
+                partnerEmpathy: '',
+                rawThoughts: '',
+                nvcStatements: [],
+                yourVersion: '',
+                theirVersion: '',
+                partnerImpact: ''
+            };
+            
+            // Reset form fields
+            document.querySelectorAll('textarea, input[type="text"]').forEach(field => {
+                if (field.type !== 'range') field.value = '';
+            });
+            
+            // Reset sliders
+            document.getElementById('regulationSlider').value = 5;
+            document.getElementById('chargeSlider').value = 5;
+            document.getElementById('regulationValue').textContent = '5';
+            document.getElementById('chargeValue').textContent = '5';
+            document.getElementById('chargeDisplay').textContent = '5';
+            
+            // Reset selections
+            document.querySelectorAll('.suggestion-item.selected').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            
+            // Hide sections
+            document.getElementById('nvcOutput').classList.add('hidden');
+            document.getElementById('restorationMenu').classList.add('hidden');
+            document.getElementById('conversation').classList.add('hidden');
+            document.getElementById('partnerWarning').classList.add('hidden');
+            document.getElementById('completionSection').classList.add('hidden');
+            
+            // Reset impact reminder
+            updateImpactReminder([]);
+            
+            // Reset progress
+            document.getElementById('progressFill').style.width = '33.33%';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        async function generatePDF() {
+            showLoading();
+            
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Set up fonts and colors
+                doc.setFont("helvetica");
+            
+            // Title
+            doc.setFontSize(20);
+            doc.setTextColor(255, 0, 0); // Red color
+            doc.text("Repair Process Summary", 20, 30);
+            
+            // Date
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 40);
+            
+            let yPosition = 60;
+            
+            // 1. RESTORATION MENU FIRST
+            doc.setFontSize(16);
+            doc.setTextColor(255, 0, 0);
+            doc.text("Restoration Menu:", 20, yPosition);
+            yPosition += 15;
+            
+            doc.setFontSize(11);
+            doc.setTextColor(0, 0, 0);
+            
+            // Get restoration options from the page
+            const restorationItems = document.querySelectorAll('#restorationOptions .restoration-item');
+            restorationItems.forEach((item, index) => {
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 30;
+                }
+                
+                let text = item.textContent || item.innerText;
+                // Clean up text - remove extra whitespace and line breaks
+                text = text.replace(/\s+/g, ' ').trim();
+                
+                // Split text into properly sized lines for PDF
+                const lines = doc.splitTextToSize(text, 160); // Reduced width for better margins
+                doc.text(lines, 20, yPosition);
+                yPosition += lines.length * 5 + 10; // Better spacing
+            });
+            
+            // Add some space before summary
+            yPosition += 10;
+            
+            // Check if we need a new page
+            if (yPosition > 220) {
+                doc.addPage();
+                yPosition = 30;
+            }
+            
+            // 2. AI-GENERATED SUMMARY SECOND
+            try {
+                const allContext = gatherAllContext();
+                const summaryResponse = await callClaudeAPI('Generate TLDR summary', 'summary', allContext);
+                
+                doc.setFontSize(16);
+                doc.setTextColor(255, 0, 0);
+                doc.text("Summary:", 20, yPosition);
+                yPosition += 15;
+                
+                doc.setFontSize(11);
+                doc.setTextColor(0, 0, 0);
+                
+                const summaryLines = summaryResponse.split('\n').filter(line => line.trim().length > 0);
+                summaryLines.forEach(line => {
+                    if (yPosition > 250) {
+                        doc.addPage();
+                        yPosition = 30;
+                    }
+                    
+                    // Clean up the line text
+                    const cleanLine = line.replace(/\s+/g, ' ').trim();
+                    const formattedLines = doc.splitTextToSize(cleanLine, 160);
+                    doc.text(formattedLines, 20, yPosition);
+                    yPosition += formattedLines.length * 5 + 6;
+                });
+                
+            } catch (error) {
+                console.error('Error generating summary for PDF:', error);
+                // Fallback to basic summary if AI fails
+                doc.setFontSize(16);
+                doc.setTextColor(255, 0, 0);
+                doc.text("Summary:", 20, yPosition);
+                yPosition += 15;
+                
+                doc.setFontSize(11);
+                doc.setTextColor(0, 0, 0);
+                doc.text("Summary generation failed. See full details in original form.", 20, yPosition);
+            }
+            
+                // Save the PDF
+                const timestamp = new Date().toISOString().slice(0,10);
+                doc.save(`repair-process-${timestamp}.pdf`);
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Error generating PDF. Please try again.');
+            } finally {
+                hideLoading();
+            }
+        }
+    </script>
+</body>
+</html>
