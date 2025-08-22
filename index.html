@@ -916,7 +916,7 @@ Repair partner's impact: ${appData.partnerImpact}
 
         async function callClaudeAPI(prompt, type, context) {
             try {
-                const response = await fetch('/api/claude', {
+                const response = await fetch('/.netlify/functions/claude', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
